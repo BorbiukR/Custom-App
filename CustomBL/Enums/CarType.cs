@@ -1,4 +1,4 @@
-namespace Console.Web.Models
+﻿namespace Custom.BL.Enums
 {
     public enum CarType
     {

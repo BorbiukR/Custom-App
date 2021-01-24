@@ -3,7 +3,7 @@ using Custom.BL.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using Custom.BL.Models;
 
 namespace Custom.Cmd
 {
@@ -67,7 +67,11 @@ namespace Custom.Cmd
             if (fuelType == FuelType.Electric)
             {
                 var carEnginePower = Parsing.ParseInt("engine power in KW");
-                var electricCarResult = CustomService.GetCarCustomValue(fuelType, carEnginePower);
+                var electricCarResult = CustomService.GetResult(new CalculateModel
+                {
+                    FuelType = fuelType,
+                    EngineVolume = carEnginePower,
+                });
                 Console.WriteLine($"Full payment : {electricCarResult} EUR.");
             }
             else
@@ -76,7 +80,14 @@ namespace Custom.Cmd
                 var carYear = Parsing.ParseDateTime("year");
                 var carEngineVolume = Parsing.ParseInt("engine volume in cubic centimeters");
 
-                var carResult = CustomService.GetCarCustomValue(fuelType, carEngineVolume, carPrice, carYear);
+                var carResult = CustomService.GetResult(new CalculateModel
+                {
+                    CarType = CarType.Car,
+                    EngineVolume = carEngineVolume,
+                    FuelType = fuelType,
+                    Year = carYear,
+                    Price = carPrice,
+                });
                 Console.WriteLine($"Full payment : {carResult} EUR.");
             }
         }
@@ -88,7 +99,14 @@ namespace Custom.Cmd
             var truckEngineVolume = Parsing.ParseInt("engine volume in cubic centimeters");
             var truckFullWeight = Parsing.ParseInt("full weight in kilograms");
 
-            var truckResult = CustomService.GetTruckCustomValue(truckPrice, truckYear, truckEngineVolume, truckFullWeight);
+            var truckResult = CustomService.GetResult(new CalculateModel
+            {
+                CarType = CarType.Truck,
+                EngineVolume = truckEngineVolume,
+                FuelWeight = truckFullWeight,
+                Price = truckPrice,
+                Year = truckYear,
+            });
             Console.WriteLine($"Full payment : {truckResult} EUR.");
         }
 
@@ -98,7 +116,13 @@ namespace Custom.Cmd
             var bikeYear = Parsing.ParseDateTime("year");
             var bikeEngineVolume = Parsing.ParseInt("engine volume in cubic centimeters");
 
-            var bikeResult = CustomService.GetBikeCustomValue(bikePrice, bikeYear, bikeEngineVolume);
+            var bikeResult = CustomService.GetResult(new CalculateModel
+            {
+                CarType = CarType.Bike,
+                Price = bikePrice,
+                Year = bikeYear,
+                EngineVolume = bikeEngineVolume,
+            });
             Console.WriteLine($"Full payment : {bikeResult} EUR.");
         }
 

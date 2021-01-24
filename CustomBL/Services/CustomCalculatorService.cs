@@ -1,11 +1,24 @@
 ﻿using System;
 using Custom.BL.Enums;
+using Custom.BL.Models;
 
 namespace Custom.BL.Services
 {
     public class CustomCalculatorService : ICustomService
     {
-        public int GetCarCustomValue(FuelType fuelType, int engineVolume, int price = default, DateTime year = default)
+        public int GetResult(CalculateModel model)
+        {
+            return model.CarType switch
+            {
+                CarType.Car => GetCarCustomValue(model.FuelType, model.EngineVolume, model.Price, model.Year),
+                CarType.Truck => GetTruckCustomValue(model.Price, model.Year, model.EngineVolume, model.FuelWeight),
+                CarType.Bus => GetBusCustomValue(model.Price, model.Year, model.EngineVolume, model.FuelType),
+                CarType.Bike => GetBikeCustomValue(model.Price, model.Year, model.EngineVolume),
+                _ => throw new NotImplementedException()
+            };
+        }
+
+        private static int GetCarCustomValue(FuelType fuelType, int engineVolume, int price = default, DateTime year = default)
         {
             if (fuelType == FuelType.Electric)
             {
@@ -26,7 +39,7 @@ namespace Custom.BL.Services
             return fullPayment;
         }
 
-        public int GetTruckCustomValue(int price, DateTime year, int engineVolume, int fullWeight)
+        private static int GetTruckCustomValue(int price, DateTime year, int engineVolume, int fullWeight)
         {
             var importDuty = GetImportDuty(price);
             var exciseValue = GetTruckExciseValue(year, fullWeight, engineVolume);
@@ -36,7 +49,7 @@ namespace Custom.BL.Services
             return fullPayment;
         }
 
-        public int GetBikeCustomValue(int price, DateTime year, int engineVolume)
+        private static int GetBikeCustomValue(int price, DateTime year, int engineVolume)
         {
             var importDuty = GetImportDuty(price);
             var exciseValue = GetBikeExciseValue(year, engineVolume);
@@ -46,7 +59,7 @@ namespace Custom.BL.Services
             return fullPayment;
         }
 
-        public int GetBusCustomValue(int price, DateTime year, int engineVolume, FuelType fuelType)
+        private static int GetBusCustomValue(int price, DateTime year, int engineVolume, FuelType fuelType)
         {
             var importDuty = GetImportDuty(price);
             var exciseValue = GetBusExciseValue(year, engineVolume, fuelType);
@@ -65,11 +78,9 @@ namespace Custom.BL.Services
             Convert.ToInt32(exciseTax + importDuty + vat);
 
         /// <summary>
-        /// Рахує кількість повних років
+        /// Рахує кількість повних років //TODO: translate to English
         /// </summary>
-        /// <param name="year"> Рік транспортного засобу. </param>
-        /// <returns></returns>
-        private int GetCountOfFullYears(DateTime year)
+        private static int GetCountOfFullYears(DateTime year)
         {
             var now = int.Parse(DateTime.Now.ToString("yyyyMMdd"));
             var dob = int.Parse(year.ToString("yyyyMMdd"));
@@ -77,13 +88,9 @@ namespace Custom.BL.Services
         }
 
         /// <summary>
-        /// Рахує акциз для легкових автомобілів
+        /// Рахує акциз для легкових автомобілів //TODO: translate to English
         /// </summary>
-        /// <param name="year"> Рік легкового автомобіля </param>
-        /// <param name="fuelType"> Тип пального легкового автомобіля </param>
-        /// <param name="engineVolume"> Потужність легкового автомобіля </param>
-        /// <returns></returns>
-        private int GetCarExciseValue(DateTime year, FuelType fuelType, int engineVolume)
+        private static int GetCarExciseValue(DateTime year, FuelType fuelType, int engineVolume)
         {
             var totalYearsCount = GetCountOfFullYears(year);
 
@@ -104,13 +111,9 @@ namespace Custom.BL.Services
         }
 
         /// <summary>
-        /// Рахує акциз для вантажних автомобілів
+        /// Рахує акциз для вантажних автомобілів //TODO: translate to English
         /// </summary>
-        /// <param name="year"> Рік вантажного автомобіля </param>
-        /// <param name="fullWeight"> Повна масса вантажного автомобіля </param>
-        /// <param name="engineVolume"> Потужність вантажного автомобіля </param>
-        /// <returns></returns>
-        private int GetTruckExciseValue(DateTime year, int fullWeight, int engineVolume)
+        private static int GetTruckExciseValue(DateTime year, int fullWeight, int engineVolume)
         {
             var totalYearsCount = GetCountOfFullYears(year);
 
@@ -135,12 +138,9 @@ namespace Custom.BL.Services
         }
 
         /// <summary>
-        /// Рахує акциз для мото транспорту
+        /// Рахує акциз для мото транспорту //TODO: translate to English
         /// </summary>
-        /// <param name="year"> Рік мото транспорту </param>
-        /// <param name="engineVolume"> Потужність мото транспорту </param>
-        /// <returns></returns>
-        private int GetBikeExciseValue(DateTime year, int engineVolume)
+        private static int GetBikeExciseValue(DateTime year, int engineVolume)
         {
             var totalYearsCount = GetCountOfFullYears(year);
 
@@ -156,13 +156,9 @@ namespace Custom.BL.Services
         }
 
         /// <summary>
-        /// Рахує акциз для автобусів
+        /// Рахує акциз для автобусів //TODO: translate to English
         /// </summary>
-        /// <param name="year"> Рік автобуса </param>
-        /// <param name="engineVolume"> Потужність автобуса </param>
-        /// <param name="fuelType"> Тип пального автобуса </param>
-        /// <returns></returns>
-        private int GetBusExciseValue(DateTime year, int engineVolume, FuelType fuelType)
+        private static int GetBusExciseValue(DateTime year, int engineVolume, FuelType fuelType)
         {
             var totalYearsCount = GetCountOfFullYears(year);
 
@@ -170,26 +166,30 @@ namespace Custom.BL.Services
 
             if (fuelType == FuelType.Gas)
             {
-                if (totalYearsCount < 8) rate = 0.007;          
+                if (totalYearsCount < 8) rate = 0.007;
                 else if (totalYearsCount > 8) rate = 0.35;
             }
             else if (fuelType == FuelType.Diesel)
             {
                 if (totalYearsCount < 8)
                 {
-                    if (engineVolume < 2500 && engineVolume > 5000) rate = 0.007;
-                    else if (engineVolume > 2500 && engineVolume < 5000) rate = 0.003;
+                    if (engineVolume < 2500 && engineVolume > 5000) //TODO: check the expression
+                        rate = 0.007;
+                    else if (engineVolume > 2500 && engineVolume < 5000)
+                        rate = 0.003;
                 }
                 else if (totalYearsCount > 8)
                 {
-                    if (engineVolume < 2500 && engineVolume > 5000) rate = 0.35;
-                    else if (engineVolume > 2500 && engineVolume < 5000) rate = 0.15;
-                }                              
+                    if (engineVolume < 2500 && engineVolume > 5000) //TODO: check the expression
+                        rate = 0.35;
+                    else if (engineVolume > 2500 && engineVolume < 5000)
+                        rate = 0.15;
+                }
             }
 
-            var res = rate * (engineVolume / 1000) * totalYearsCount;
+            var excise = rate * engineVolume / 1000 * totalYearsCount;
 
-            return (int)Math.Round(res, 0);
+            return (int) Math.Round(excise, 0);
         }
     }
 }

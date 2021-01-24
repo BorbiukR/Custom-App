@@ -1,17 +1,18 @@
 ﻿using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Console.Web.Models;
-using Console.Web.Services;
+using Custom.BL.Models;
+using Custom.BL.Services;
 
 namespace Console.Web.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ICustomServiceClient _customServiceClient;
+        private readonly ICustomService _customService;
 
-        public HomeController(ICustomServiceClient customServiceClient)
+        public HomeController(ICustomService customService)
         {
-            _customServiceClient = customServiceClient;
+            _customService = customService;
         }
 
         [HttpGet]
@@ -23,7 +24,15 @@ namespace Console.Web.Controllers
         [HttpPost]
         public IActionResult Index(CustomViewModel model)
         {
-            model.Result = _customServiceClient.GetResult(model);
+            model.Result = _customService.GetResult(new CalculateModel
+            {
+                CarType = model.CarType,
+                EngineVolume = model.EngineVolume,
+                FuelType = model.FuelType,
+                FuelWeight = model.FuelWeight,
+                Price = model.Price,
+                Year = model.Year,
+            });
 
             return View(model);
         }
