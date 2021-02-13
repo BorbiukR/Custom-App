@@ -1,0 +1,69 @@
+﻿@model Web.ViewModels.RegisterModel
+
+<h2>Registration</h2>
+
+@if (ViewBag.Status != null && Convert.ToBoolean(ViewBag.Status))
+{
+    if (ViewBag.Message != null)
+    {
+        <div class="alert alert-success">
+            <strong>Success!</strong>@ViewBag.Message
+        </div>
+    }
+}
+else
+{
+    <form asp-action="Register" asp-controller="Account" asp-anti-forgery="true">
+        <div class="validation" asp-validation-summary="ModelOnly"></div>
+        <div>
+            <div>
+                <label asp-for="FirstName">First Name</label>
+                <input type="text" asp-for="FirstName" />
+                <span asp-validation-for="FirstName" class="text-danger"></span>
+            </div>
+            <div>
+                <label asp-for="LastName">Last Name</label>
+                <input type="text" asp-for="LastName" />
+                <span asp-validation-for="LastName" class="text-danger"></span>
+            </div>
+            <div>
+                <label asp-for="Gender">Gender</label>
+                <input type="radio" name="Gender" value="M" />Male
+                <input type="radio" name="Gender" value="F" />Female
+                <span asp-validation-for="Gender" class="text-danger"></span>
+            </div>
+            <div>
+                <label asp-for="Email">E-mail</label>
+                <input type="text" asp-for="Email" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+                @Html.ValidationMessage("EmailExsist", new {@class="text-danger"});
+            </div>
+            <div>
+                <label asp-for="DateOfBirth">Date Of Birth</label>
+                <input type="date" asp-format="{0:yyyy-MM-dd}" asp-for="DateOfBirth" />
+                <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+            </div>
+            <div>
+                <label asp-for="Password">Password</label>
+                <input asp-for="Password" type="password" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+            <div>
+                <label asp-for="ConfirmPassword">Confirm password</label>
+                <input asp-for="ConfirmPassword" type="password" />
+                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+            </div>
+            <div>
+                <input type="submit" value="Sign up" />
+                @Html.ActionLink("Login", "Login")
+            </div>
+        </div>
+    </form>
+
+    if (ViewBag.Message != null)
+    {
+        <div class="alert alert-danger">
+            <strong>Error!</strong>@ViewBag.Message
+        </div>
+    }
+}

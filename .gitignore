@@ -1,0 +1,78 @@
+riderModule.iml
+.terraform/
+
+###########################################################
+# Include dlls if they’re in the NuGet packages directory #
+###########################################################
+!**/packages/*/lib/*.dll
+!**/packages/*/lib/*/*.dll
+
+#############################################################
+# Include dlls if they're in the CommonReferences directory #
+#############################################################
+!**/*CommonReferences/*.dll
+
+######################
+# OS generated files #
+######################
+**/*.DS_Store?
+**/*ehthumbs.db
+**/*Icon?
+**/*Thumbs.db
+**/*[Bb]in
+**/*[Oo]bj
+**/*[Tt]est[Rr]esults
+**/*.suo
+**/*.user
+**/*.[Cc]ache
+**/*packages
+**/*NuGet.exe
+**/*_[Ss]cripts
+**/.exe
+**/.dll
+**/.nupkg
+**/.ncrunchsolution
+**/*.com
+**/*.class
+**/*.pdb
+**/*.dll.config
+**/*.cache
+**/*.suo
+
+######################
+# Logs and databases #
+######################
+**/.log
+**/.sqlite
+
+#############
+# IDE files #
+#############
+**/*_[Rr]eSharper.*
+**.*[Rr]eSharper.*
+**/*[Rr]esharper*
+**/*.dot[Cc]over
+**/*.idea
+**/*.vscode/*
+**/UpgradeLog.XML
+**/_UpgradeReport_Files/
+
+###################
+# Web publish log #
+###################
+**/*.Publish.xml
+
+############
+# Packages #
+############
+# it’s better to unpack these files and commit the raw source
+# git has its own built in compression methods
+**/*.7z
+**/*.dmg
+**/*.gz
+**/*.iso
+**/*.jar
+**/*.rar
+**/*.tar
+**/*.zip
+node_modules/

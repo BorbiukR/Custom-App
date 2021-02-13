@@ -1,0 +1,51 @@
+﻿@using Custom.BL.Enums
+@model CustomViewModel
+
+<form asp-controller="Home" asp-action="Index" method="post">
+    <div class="form-group">
+
+        <div class="row" id="CarType">
+            <label asp-for="CarType" class="col-lg-2"></label>
+            <select asp-for="CarType" class="col-lg-2" asp-items="Html.GetEnumSelectList<CarType>()">
+                <option disabled selected value="">Select Сar Type</option>
+            </select>
+        </div>
+
+        <div class="row" id="FuelType">
+            <label asp-for="FuelType" class="col-lg-2"></label>
+            <select asp-for="FuelType" class="col-lg-2" asp-items="Html.GetEnumSelectList<FuelType>()">
+                <option disabled selected value="">Select Fuel Type</option>
+            </select>
+        </div>
+
+        <div class="row" id="EngineVolume">
+            <label asp-for="EngineVolume" class="col-lg-2"></label>
+            <input type="number" asp-for="EngineVolume" class="col-lg-2" />
+        </div>
+
+        <div class="row" id="Price">
+            <label asp-for="Price" class="col-lg-2"></label>
+            <input type="number" asp-for="Price" class="col-lg-2" />
+        </div>
+
+        <div class="row" id="Year">
+            <label asp-for="Year" class="col-lg-2"></label>
+            <input type="date" asp-format="{0:yyyy-MM-dd}" asp-for="Year" class="col-lg-2" />
+        </div>
+
+        <div class="row" id="CarWeight">
+            <label asp-for="CarWeight" class="col-lg-2"></label>
+            <input type="number" asp-for="CarWeight" class="col-lg-2" />
+        </div>
+
+        <div class="row" id="Result">
+            <label asp-for="Result" class="col-lg-2"></label>
+            <input type="number" disabled="disabled" class="col-lg-2" asp-for="Result" />
+        </div>
+
+        <div class="row" id="Submit">
+            <input type="submit" value="Submit" asp-action="Index" />
+        </div>
+
+    </div>
+</form>
