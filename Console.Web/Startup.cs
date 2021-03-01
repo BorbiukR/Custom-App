@@ -12,17 +12,11 @@ namespace Web
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
-        {
-            Configuration = configuration;
-        }
-
         public IConfiguration Configuration { get; }
+        public Startup(IConfiguration configuration) => Configuration = configuration;      
 
         public void ConfigureServices(IServiceCollection services)
-        {
-            services.AddControllersWithViews().AddRazorRuntimeCompilation();
-
+        {        
             services.AddScoped<ICustomService, CustomCalculatorService>();
 
             string connection = Configuration.GetConnectionString("DefaultConnection");
@@ -33,6 +27,8 @@ namespace Web
                 {
                     options.LoginPath = new Microsoft.AspNetCore.Http.PathString("/Account/Login");
                 });
+
+            services.AddControllersWithViews().AddRazorRuntimeCompilation();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -46,7 +42,9 @@ namespace Web
                 app.UseExceptionHandler("/Home/Error");
                 app.UseHsts();
             }
+
             app.UseHttpsRedirection();
+
             app.UseStaticFiles();
 
             app.UseRouting();

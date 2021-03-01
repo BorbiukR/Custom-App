@@ -17,11 +17,8 @@ namespace Web.Controllers
     public class AccountController : Controller
     {
         private readonly AppDBContext db;
+        public AccountController(AppDBContext context) => db = context;
 
-        public AccountController(AppDBContext context)
-        {
-            db = context;
-        }
 
         [HttpGet]
         public IActionResult Login()
@@ -52,6 +49,7 @@ namespace Web.Controllers
                 }
             }
             ViewBag.Message = ModelState;
+
             return View();
         }
 
@@ -65,9 +63,6 @@ namespace Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterModel model, User user)
         {
-            bool Status = false;
-            string message = "";
-
             if (ModelState.IsValid)
             {
                 var isExsist = IsEmailExsist(model.Email);
@@ -79,8 +74,8 @@ namespace Web.Controllers
 
                 user.ActivationCode = Guid.NewGuid();
 
-                model.Password = Crypto.Hash(model.Password);
-                model.ConfirmPassword = Crypto.Hash(model.ConfirmPassword);
+                model.Password = CryptoHash.Hash(model.Password);
+                model.ConfirmPassword = CryptoHash.Hash(model.ConfirmPassword);
 
                 user.IsEmailVerified = false;
 
@@ -89,19 +84,18 @@ namespace Web.Controllers
 
                 SendVertificationLinkEmail(user.Email, user.ActivationCode.ToString());
 
-                message = " Registration successfully done. Account activation link " +
-                          " has been sent to your email id: " + user.Email;
-                Status = true;
+                ViewBag.Message = " Registration successfully done. Account activation link " +
+                                  " has been sent to your email id: " + user.Email;
+                user.IsEmailVerified = true;
             }
             else
             {
                 ModelState.AddModelError("", "Incorrect login and (or) password");
             }
 
-            ViewBag.Message = message;
-            ViewBag.Status = Status;
+           ViewBag.Status = user.IsEmailVerified;
 
-            return View(model);
+           return View(model);
         }
 
         [NonAction]
@@ -116,43 +110,38 @@ namespace Web.Controllers
         {
             var verifyUrl = Request.Scheme + "://" + Request.Host + ":" + "/Account/" + emailFor + "/" + activationCode;
 
-            var fromEmail = new MailAddress("simplekek@gmail.com", "Custom App");
-            var toEmail = new MailAddress(email);
-            var fromEmailPassword = "borbiukroman";
+            MailMessage message = new MailMessage
+            {
+                IsBodyHtml = true,
+                From = new MailAddress("robotaborbiuk@gmail.com", "Custom App")
+            };
+            message.To.Add(email);
 
-            string subject = "";
-            string body = "";
             if (emailFor == "VerifyAccount")
             {
-                subject = "Your account is successfully created!";
-                body = "<br/><br/>We are excited to tell you that your account is" +
-                       " successfully created. Please click on the below link to verify your account" +
-                       " <br/><br/><a href='" + verifyUrl + "'>" + verifyUrl + "</a> ";
+                message.Subject = "Your account is successfully created!";
+                message.Body = "<br/><br/>We are excited to tell you that your account is" +
+                               "successfully created. Please click on the below link to verify your account" +
+                               "<br/><br/><a href='" + verifyUrl + "'>" + verifyUrl + "</a>";
             }
             else if (emailFor == "ResetPassword")
             {
-                subject = "Reset Password";
-                body = "Hi,<br/><br/>We got request for reset your account password. Please click on the below link to reset your password" +
-                       "<br/><br/><a href=" + verifyUrl + ">Reset Password link</a>";
+                message.Subject = "Reset Password";
+                message.Body = "Hi,<br/><br/>We got request for reset your account password." +
+                               " Please click on the below link to reset your password" +
+                               "<br/><br/><a href=" + verifyUrl + ">Reset Password link</a>";
             }
 
-            var smtp = new SmtpClient
+            using (SmtpClient client = new SmtpClient("smtp.gmail.com"))
             {
-                Host = "smtp.gmail.com",
-                Port = 587,
-                DeliveryMethod = SmtpDeliveryMethod.Network,
-                Credentials = new NetworkCredential(fromEmail.Address, fromEmailPassword),
-                EnableSsl = true,
-                UseDefaultCredentials = false
-            };
+                client.UseDefaultCredentials = false;
+                client.Credentials = new NetworkCredential("robotaborbiuk@gmail.com", "Robotaborbiuk1234");
+                client.Port = 587;
+                client.EnableSsl = true;
+                client.DeliveryMethod = SmtpDeliveryMethod.Network;
 
-            using var message = new MailMessage(fromEmail, toEmail)
-            {
-                Subject = subject,
-                Body = body,
-                IsBodyHtml = true
-            };
-            smtp.Send(message);
+                client.Send(message);
+            };                         
         }
 
         [HttpGet]
@@ -185,8 +174,6 @@ namespace Web.Controllers
         [HttpPost]
         public IActionResult ForgotPassword(string Email)
         {
-            string message = "";
-
             var user = db.Users.Where(a => a.Email == Email).FirstOrDefault();
             if (user != null)
             {
@@ -194,14 +181,12 @@ namespace Web.Controllers
                 SendVertificationLinkEmail(user.Email, resetCode, "ResetPassword");
                 user.ResetPasswordCode = resetCode;
                 db.SaveChanges();
-                message = "Reset password link has been sent to your email id.";
+                ViewBag.Message = "Reset password link has been sent to your email id.";
             }
             else
             {
-                message = "Account not found";
+                ViewBag.Message = "Account not found";
             }
-
-            ViewBag.Message = message;
             return View();
         }
 
@@ -231,24 +216,21 @@ namespace Web.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult ResetPassword(ResetPasswordModel model)
         {
-            var message = "";
-
             if (ModelState.IsValid)
             {
                 var user = db.Users.Where(a => a.ResetPasswordCode == model.ResetCode).FirstOrDefault();
                 if (user != null)
                 {
-                    user.Password = Crypto.Hash(model.NewPassword);
+                    user.Password = CryptoHash.Hash(model.NewPassword);
                     user.ResetPasswordCode = "";
                     db.SaveChanges();
-                    message = "New password updated successfully";
+                    ViewBag.Message = "New password updated successfully";
                 }
             }
             else
             {
-                message = "Something invalid";
+                ViewBag.Message = "Something invalid";
             }
-            ViewBag.Message = message;
             return View(model);
         }
 
