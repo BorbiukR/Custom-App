@@ -1,22 +1,22 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
-<head>
-    @await Html.PartialAsync("MetatagsPartial")
-    <title>@ViewData["Title"] Custom Calculator</title>
-    @await Html.PartialAsync("CssPartial")
-</head>
+    <head>
+        @await Html.PartialAsync("MetatagsPartial")
+        <title>@ViewData["Title"] Custom Calculator</title>
+        @await Html.PartialAsync("CssPartial")
+    </head>
 
-<body>
-    @await Html.PartialAsync("HeaderPartial")
+    <body>
+        @await Html.PartialAsync("HeaderPartial")
 
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
+        <div class="container">
+            <main role="main" class="pb-3">
+                @RenderBody()
+            </main>
+        </div>
 
-    @await Html.PartialAsync("FooterPartial")
-    @await Html.PartialAsync("_ValidationScriptsPartial")
-    @RenderSection("Scripts", required: false)
-</body>
+        @await Html.PartialAsync("FooterPartial")
+        @await Html.PartialAsync("_ValidationScriptsPartial")
+        @RenderSection("Scripts", required: false)
+    </body>
 </html>

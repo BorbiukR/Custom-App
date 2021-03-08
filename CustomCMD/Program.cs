@@ -11,6 +11,7 @@ namespace Custom.Cmd
         static void Main()
         {
             ProcessLogicUI.SayHello();
+
             while (true)
             {
                 ProcessLogicUI.ShowCommands();
@@ -20,6 +21,7 @@ namespace Custom.Cmd
                     break;
                 }
             }
+
             ProcessLogicUI.SayBye();
         }
     }

@@ -166,8 +166,9 @@ namespace Custom.BL.Services
 
             if (fuelType == FuelType.Gas)
             {
-                if (totalYearsCount < 8) rate = 0.007;
-                else if (totalYearsCount > 8) rate = 0.35;
+                rate = totalYearsCount < 8 
+                    ? 0.007 
+                    : 0.35;
             }
             else if (fuelType == FuelType.Diesel)
             {

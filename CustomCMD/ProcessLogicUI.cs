@@ -14,7 +14,7 @@ namespace Custom.Cmd
             {ConsoleKey.C, "Car"},
             {ConsoleKey.T, "Truck"},
             {ConsoleKey.B, "Bike"},
-            {ConsoleKey.Q, "Exit"},
+            {ConsoleKey.E, "Exit"},
         };
 
         /// <summary>
@@ -31,47 +31,43 @@ namespace Custom.Cmd
         public static bool Process()
         {
             var command = Console.ReadKey().Key;
-            if (CommandsNames.TryGetValue(command, out var commandName))
+            switch (command)
             {
-                switch (command)
-                {
-                    case ConsoleKey.C:
-                        SetParamsAndGetCarCustomResult();
-                        break;
-
-                    case ConsoleKey.T:
-                        SetParamsAndGetTruckCustomResult();
-                        break;
-
-                    case ConsoleKey.B:
-                        SetParamsAndGetBikeCustomResult();
-                        break;
-
-                    case ConsoleKey.Q:
-                        return false;
-                }
+                case ConsoleKey.C:
+                    SetParamsAndGetCarCustomResult();
+                    return true;
+                case ConsoleKey.T:
+                    SetParamsAndGetTruckCustomResult();
+                    return true;
+                case ConsoleKey.B:
+                    SetParamsAndGetBikeCustomResult();
+                    return true;
+                case ConsoleKey.E:
+                    return false;
+                default:
+                    Console.WriteLine("Invalid key");
+                    return true;
             }
-            else
-            {
-                Console.WriteLine("Invalid key.");
-            }
-            return true;
         }
 
         private static void SetParamsAndGetCarCustomResult()
         {
-            Console.WriteLine($"\n\nEnter the fuel type: ");
+            Console.WriteLine("Enter the fuel type: ");
+
             ShowFuelTypes();
+
             var fuelType = Parsing.ParseFuelType();
 
             if (fuelType == FuelType.Electric)
             {
                 var carEnginePower = Parsing.ParseInt("engine power in KW");
+
                 var electricCarResult = CustomService.GetResult(new CalculateModel
                 {
                     FuelType = fuelType,
                     EngineVolume = carEnginePower,
                 });
+
                 Console.WriteLine($"Full payment : {electricCarResult} EUR.");
             }
             else
@@ -88,6 +84,7 @@ namespace Custom.Cmd
                     Year = carYear,
                     Price = carPrice,
                 });
+
                 Console.WriteLine($"Full payment : {carResult} EUR.");
             }
         }
@@ -107,7 +104,8 @@ namespace Custom.Cmd
                 Price = truckPrice,
                 Year = truckYear,
             });
-            Console.WriteLine($"Full payment : {truckResult} EUR.");
+
+            Console.WriteLine($"Full payment : {truckResult} EUR");
         }
 
         private static void SetParamsAndGetBikeCustomResult()
@@ -123,18 +121,20 @@ namespace Custom.Cmd
                 Year = bikeYear,
                 EngineVolume = bikeEngineVolume,
             });
-            Console.WriteLine($"Full payment : {bikeResult} EUR.");
+
+            Console.WriteLine($"Full payment : {bikeResult} EUR");
         }
 
         public static void SayHello() =>
-            Console.WriteLine("Hello!\nWelcome to the customs calculator.");
+            Console.WriteLine("Hello! Welcome to the customs calculator");
 
         public static void SayBye() =>
-            Console.WriteLine("\nBye!");
+            Console.WriteLine("Bye!");
 
         public static void ShowCommands()
         {
-            Console.WriteLine("\nChoose your vehicle:");
+            Console.WriteLine("Choose your vehicle:");
+
             foreach (var key in CommandsNames.Keys)
                 Console.WriteLine($"{key} - {CommandsNames[key]}");
         }
@@ -142,6 +142,7 @@ namespace Custom.Cmd
         private static void ShowFuelTypes()
         {
             var fuelTypes = Enum.GetValues(typeof(FuelType)).Cast<FuelType>();
+
             foreach (var fuelType in fuelTypes)
             {
                 var fuelTypeValue = (int)fuelType;
@@ -158,4 +159,3 @@ namespace Custom.Cmd
         }
     }
 }
-

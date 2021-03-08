@@ -8,6 +8,7 @@ namespace Custom.Cmd
         public static int ParsePrice(string name)
         {
             int value;
+
             while (true)
             {
                 Console.WriteLine($"Enter the {name} in EUR: ");
@@ -20,12 +21,14 @@ namespace Custom.Cmd
                         Console.WriteLine($"Not the correct {name} format");
                 }
             }
+
             return value;
         }
 
         public static DateTime ParseDateTime(string value)
         {
             DateTime year;
+
             while (true)
             {
                 Console.Write($"Enter the {value} (dd.MM.yyyy): ");
@@ -38,6 +41,7 @@ namespace Custom.Cmd
                         Console.WriteLine($"Not the correct {value} format");
                 }
             }
+
             return year;
         }
 

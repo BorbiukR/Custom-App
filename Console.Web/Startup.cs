@@ -29,6 +29,8 @@ namespace Web
                 });
 
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
+
+            services.AddMvc(options => options.MaxModelValidationErrors = 50);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

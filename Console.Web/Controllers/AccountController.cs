@@ -139,13 +139,12 @@ namespace Web.Controllers
                 client.Port = 587;
                 client.EnableSsl = true;
                 client.DeliveryMethod = SmtpDeliveryMethod.Network;
-
                 client.Send(message);
             };                         
         }
 
         [HttpGet]
-        public IActionResult VerifyAccount(string id)
+        public async Task<IActionResult> VerifyAccount(string id)
         {
             bool Status = false;
 
@@ -153,7 +152,7 @@ namespace Web.Controllers
             if (user != null)
             {
                 user.IsEmailVerified = true;
-                db.SaveChanges();
+                await db.SaveChangesAsync();
                 Status = true;
             }
             else
@@ -172,7 +171,7 @@ namespace Web.Controllers
         }
 
         [HttpPost]
-        public IActionResult ForgotPassword(string Email)
+        public async Task<IActionResult> ForgotPassword(string Email)
         {
             var user = db.Users.Where(a => a.Email == Email).FirstOrDefault();
             if (user != null)
@@ -180,12 +179,12 @@ namespace Web.Controllers
                 string resetCode = Guid.NewGuid().ToString();
                 SendVertificationLinkEmail(user.Email, resetCode, "ResetPassword");
                 user.ResetPasswordCode = resetCode;
-                db.SaveChanges();
+                await db.SaveChangesAsync();
                 ViewBag.Message = "Reset password link has been sent to your email id.";
             }
             else
             {
-                ViewBag.Message = "Account not found";
+                ViewBag.Message = "Email not found";
             }
             return View();
         }
@@ -214,7 +213,7 @@ namespace Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult ResetPassword(ResetPasswordModel model)
+        public async Task<IActionResult> ResetPassword(ResetPasswordModel model)
         {
             if (ModelState.IsValid)
             {
@@ -223,7 +222,7 @@ namespace Web.Controllers
                 {
                     user.Password = CryptoHash.Hash(model.NewPassword);
                     user.ResetPasswordCode = "";
-                    db.SaveChanges();
+                    await db.SaveChangesAsync();
                     ViewBag.Message = "New password updated successfully";
                 }
             }
@@ -246,6 +245,7 @@ namespace Web.Controllers
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(id));
         }
 
+        [HttpPost]
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);

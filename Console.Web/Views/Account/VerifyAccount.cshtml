@@ -7,7 +7,7 @@
 @if(ViewBag.Status !=null && Convert.ToBoolean(ViewBag.Status))
  {
     <div class="alert alert-success">
-        <strong>Success!</strong> Your account has been succssesfully created. Click here to @Html.ActionLink("Login","Login","Account")
+        <strong>Success!</strong> Your account has been succssesfully created. Click here to <a asp-action="Login" asp-controller="Account">Login</a>
     </div> 
 }
 else
@@ -16,4 +16,3 @@ else
         <strong>Error!</strong> @ViewBag.Message
     </div>
 }
-
