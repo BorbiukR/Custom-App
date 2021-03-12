@@ -3,7 +3,7 @@ using System.Text;
 
 namespace Web
 {
-    public static class CryptoHash
+    public static class Cryptography
     {
         public static string Hash(string value)
         {

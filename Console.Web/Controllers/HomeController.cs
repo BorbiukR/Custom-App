@@ -10,6 +10,7 @@ namespace Web.Controllers
     public class HomeController : Controller
     {
         private readonly ICustomService _customService;
+
         public HomeController(ICustomService customService) => _customService = customService;
       
 

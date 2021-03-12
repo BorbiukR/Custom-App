@@ -17,6 +17,7 @@ namespace Web.Controllers
     public class AccountController : Controller
     {
         private readonly AppDBContext db;
+
         public AccountController(AppDBContext context) => db = context;
 
 
@@ -32,7 +33,8 @@ namespace Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = db.Users.Where(a => a.Email == model.Email).FirstOrDefault();
+                var user = db.Users.Where(a => a.Email == model.Email && a.Password == model.Password).FirstOrDefault();
+
                 if (user != null)
                 {
                     await Authenticate(model.Email);
@@ -42,15 +44,15 @@ namespace Web.Controllers
                         ViewBag.Message = "Please verify your email first";
                         return View();
                     }
+
+                    return RedirectToAction("Index", "Home");
                 }
                 else
                 {
                     ModelState.AddModelError("", "Invalid credential provided");
                 }
             }
-            ViewBag.Message = ModelState;
-
-            return View();
+            return View(model);
         }
 
         [HttpGet]
@@ -66,6 +68,7 @@ namespace Web.Controllers
             if (ModelState.IsValid)
             {
                 var isExsist = IsEmailExsist(model.Email);
+
                 if (isExsist)
                 {
                     ModelState.AddModelError("EmailExsist", "Email alredy exsist");
@@ -74,8 +77,8 @@ namespace Web.Controllers
 
                 user.ActivationCode = Guid.NewGuid();
 
-                model.Password = CryptoHash.Hash(model.Password);
-                model.ConfirmPassword = CryptoHash.Hash(model.ConfirmPassword);
+                model.Password = Cryptography.Hash(model.Password);
+                model.ConfirmPassword = Cryptography.Hash(model.ConfirmPassword);
 
                 user.IsEmailVerified = false;
 
@@ -93,9 +96,9 @@ namespace Web.Controllers
                 ModelState.AddModelError("", "Incorrect login and (or) password");
             }
 
-           ViewBag.Status = user.IsEmailVerified;
+            ViewBag.Status = user.IsEmailVerified;
 
-           return View(model);
+            return View(model);
         }
 
         [NonAction]
@@ -140,7 +143,7 @@ namespace Web.Controllers
                 client.EnableSsl = true;
                 client.DeliveryMethod = SmtpDeliveryMethod.Network;
                 client.Send(message);
-            };                         
+            };
         }
 
         [HttpGet]
@@ -177,10 +180,14 @@ namespace Web.Controllers
             if (user != null)
             {
                 string resetCode = Guid.NewGuid().ToString();
+
                 SendVertificationLinkEmail(user.Email, resetCode, "ResetPassword");
+
                 user.ResetPasswordCode = resetCode;
+
                 await db.SaveChangesAsync();
-                ViewBag.Message = "Reset password link has been sent to your email id.";
+
+                ViewBag.Message = "Reset password link has been sent to your email.";
             }
             else
             {
@@ -220,9 +227,12 @@ namespace Web.Controllers
                 var user = db.Users.Where(a => a.ResetPasswordCode == model.ResetCode).FirstOrDefault();
                 if (user != null)
                 {
-                    user.Password = CryptoHash.Hash(model.NewPassword);
+                    user.Password = Cryptography.Hash(model.NewPassword);
+
                     user.ResetPasswordCode = "";
+
                     await db.SaveChangesAsync();
+
                     ViewBag.Message = "New password updated successfully";
                 }
             }
@@ -249,7 +259,7 @@ namespace Web.Controllers
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            return RedirectToAction("Login", "Account");
+            return RedirectToAction("Index", "Home");
         }
     }
 }
