@@ -2,7 +2,7 @@
 
 namespace Web.ViewModels
 {
-    public class RegisterModel
+    public class RegisterViewModel
     {
         [Required(ErrorMessage = "E-mail required", AllowEmptyStrings = false)]
         [Display(Name = "E-mail")]

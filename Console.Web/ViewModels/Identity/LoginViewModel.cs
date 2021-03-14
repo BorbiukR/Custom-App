@@ -2,7 +2,7 @@
 
 namespace Web.ViewModels
 {
-    public class LoginModel
+    public class LoginViewModel
     {
         [Display(Name ="E-mail")]
         [Required(ErrorMessage = "Email not specified", AllowEmptyStrings = false)]

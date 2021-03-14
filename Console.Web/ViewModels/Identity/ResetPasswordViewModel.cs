@@ -2,7 +2,7 @@
 
 namespace Web.ViewModels.Identity
 {
-    public class ResetPasswordModel
+    public class ResetPasswordViewModel
     {
         [Required(ErrorMessage = "New password required", AllowEmptyStrings = false)]
         [DataType(DataType.Password)]

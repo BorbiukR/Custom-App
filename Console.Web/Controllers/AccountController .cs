@@ -29,7 +29,7 @@ namespace Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login(LoginModel model)
+        public async Task<IActionResult> Login(LoginViewModel model)
         {
             if (ModelState.IsValid)
             {
@@ -52,6 +52,7 @@ namespace Web.Controllers
                     ModelState.AddModelError("", "Invalid credential provided");
                 }
             }
+
             return View(model);
         }
 
@@ -63,7 +64,7 @@ namespace Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Register(RegisterModel model, User user)
+        public async Task<IActionResult> Register(RegisterViewModel model, User user)
         {
             if (ModelState.IsValid)
             {
@@ -97,7 +98,6 @@ namespace Web.Controllers
             }
 
             ViewBag.Status = user.IsEmailVerified;
-
             return View(model);
         }
 
@@ -152,6 +152,7 @@ namespace Web.Controllers
             bool Status = false;
 
             var user = db.Users.Where(a => a.ActivationCode == new Guid(id)).FirstOrDefault();
+
             if (user != null)
             {
                 user.IsEmailVerified = true;
@@ -193,6 +194,7 @@ namespace Web.Controllers
             {
                 ViewBag.Message = "Email not found";
             }
+
             return View();
         }
 
@@ -206,7 +208,7 @@ namespace Web.Controllers
             var user = db.Users.Where(a => a.ResetPasswordCode == id).FirstOrDefault();
             if (user != null)
             {
-                var model = new ResetPasswordModel
+                var model = new ResetPasswordViewModel
                 {
                     ResetCode = id
                 };
@@ -220,14 +222,14 @@ namespace Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ResetPassword(ResetPasswordModel model)
+        public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
         {
             if (ModelState.IsValid)
             {
                 var user = db.Users.Where(a => a.ResetPasswordCode == model.ResetCode).FirstOrDefault();
                 if (user != null)
                 {
-                    user.Password = Cryptography.Hash(model.NewPassword);
+                    user.Password = model.NewPassword;
 
                     user.ResetPasswordCode = "";
 
@@ -240,6 +242,7 @@ namespace Web.Controllers
             {
                 ViewBag.Message = "Something invalid";
             }
+
             return View(model);
         }
 
