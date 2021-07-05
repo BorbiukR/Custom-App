@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Custom.BL.Enums;
-using Custom.BL.Services;
-
-namespace Custom.Cmd
+﻿namespace Custom.Cmd
 {
     class Program
     {

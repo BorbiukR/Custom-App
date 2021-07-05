@@ -11,14 +11,14 @@ namespace Custom.Cmd
 
             while (true)
             {
-                Console.WriteLine($"Enter the {name} in EUR: ");
+                Console.WriteLine($"\nEnter the {name} in EUR: ");
 
                 if (int.TryParse(Console.ReadLine(), out value))
                 {
                     if (value > 99 && value < 15_000_000)
                         break;
                     else
-                        Console.WriteLine($"Not the correct {name} format");
+                        Console.WriteLine($"\nNot the correct {name} format");
                 }
             }
 
@@ -31,14 +31,14 @@ namespace Custom.Cmd
 
             while (true)
             {
-                Console.Write($"Enter the {value} (dd.MM.yyyy): ");
+                Console.Write($"\nEnter the {value} (dd.MM.yyyy): ");
 
                 if (DateTime.TryParse(Console.ReadLine(), out year))
                 {
                     if (year > DateTime.Parse("01.01.1900") && year < DateTime.Now)
                         break;
                     else
-                        Console.WriteLine($"Not the correct {value} format");
+                        Console.WriteLine($"\nNot the correct {value} format");
                 }
             }
 
@@ -49,12 +49,12 @@ namespace Custom.Cmd
         {
             while (true)
             {
-                Console.Write($"Enter the {name} : ");
+                Console.Write($"\nEnter the {name} : ");
 
                 if (int.TryParse(Console.ReadLine(), out int value))
                     return value;
                 else
-                    Console.WriteLine($"Not the correct {name} format");
+                    Console.WriteLine($"\nNot the correct {name} format");
             }
         }
 
@@ -65,7 +65,7 @@ namespace Custom.Cmd
                 if (Enum.TryParse(Console.ReadLine(), out FuelType value))
                     return value;
                 else
-                    Console.WriteLine($"Not the correct fuel type format");
+                    Console.WriteLine($"\nNot the correct fuel type format");
             }
         }
     }

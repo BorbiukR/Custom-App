@@ -15,6 +15,6 @@ namespace Custom.BL.Models
 
         public DateTime Year { get; set; }
 
-        public int FuelWeight { get; set; }
+        public int CarWeight { get; set; }
     }
 }

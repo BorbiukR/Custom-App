@@ -11,7 +11,7 @@ namespace Custom.BL.Services
             return model.CarType switch
             {
                 CarType.Car => GetCarCustomValue(model.FuelType, model.EngineVolume, model.Price, model.Year),
-                CarType.Truck => GetTruckCustomValue(model.Price, model.Year, model.EngineVolume, model.FuelWeight),
+                CarType.Truck => GetTruckCustomValue(model.Price, model.Year, model.EngineVolume, model.CarWeight),
                 CarType.Bus => GetBusCustomValue(model.Price, model.Year, model.EngineVolume, model.FuelType),
                 CarType.Bike => GetBikeCustomValue(model.Price, model.Year, model.EngineVolume),
                 _ => throw new NotImplementedException()
@@ -21,9 +21,7 @@ namespace Custom.BL.Services
         private static int GetCarCustomValue(FuelType fuelType, int engineVolume, int price = default, DateTime year = default)
         {
             if (fuelType == FuelType.Electric)
-            {
                 return engineVolume;
-            }
 
             if (price == default || year == default)
             {
@@ -174,17 +172,15 @@ namespace Custom.BL.Services
             {
                 if (totalYearsCount < 8)
                 {
-                    if (engineVolume < 2500 && engineVolume > 5000) //TODO: check the expression
-                        rate = 0.007;
-                    else if (engineVolume > 2500 && engineVolume < 5000)
-                        rate = 0.003;
+                    rate = (engineVolume < 2500 && engineVolume > 5000)
+                        ? 0.007
+                        : 0.003;
                 }
                 else if (totalYearsCount > 8)
                 {
-                    if (engineVolume < 2500 && engineVolume > 5000) //TODO: check the expression
-                        rate = 0.35;
-                    else if (engineVolume > 2500 && engineVolume < 5000)
-                        rate = 0.15;
+                    rate = (engineVolume < 2500 && engineVolume > 5000)
+                        ? 0.35
+                        : 0.15;
                 }
             }
 

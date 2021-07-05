@@ -9,24 +9,20 @@ namespace Custom.Cmd
 {
     public class ProcessLogicUI
     {
-        private static readonly Dictionary<ConsoleKey, string> CommandsNames = new Dictionary<ConsoleKey, string>
+        private static ICustomService _customService;
+
+        /// <summary>
+        /// Service that calculate custom of cars.
+        /// </summary>
+        private static ICustomService CustomService => _customService ??= new CustomCalculatorService();
+
+        private static readonly Dictionary<ConsoleKey, string> _commandsNames = new Dictionary<ConsoleKey, string>
         {
             {ConsoleKey.C, "Car"},
             {ConsoleKey.T, "Truck"},
             {ConsoleKey.B, "Bike"},
             {ConsoleKey.E, "Exit"},
         };
-
-        /// <summary>
-        /// Instance of <see cref="ICustomService"/>
-        /// </summary>
-        private static ICustomService _customService;
-
-        /// <summary>
-        /// Service that calculate custom of cars.
-        /// </summary>
-        private static ICustomService CustomService =>
-            _customService ??= new CustomCalculatorService();
 
         public static bool Process()
         {
@@ -52,7 +48,7 @@ namespace Custom.Cmd
 
         private static void SetParamsAndGetCarCustomResult()
         {
-            Console.WriteLine("Enter the fuel type: ");
+            Console.WriteLine("Enter the fuel type: \n");
 
             ShowFuelTypes();
 
@@ -100,7 +96,7 @@ namespace Custom.Cmd
             {
                 CarType = CarType.Truck,
                 EngineVolume = truckEngineVolume,
-                FuelWeight = truckFullWeight,
+                CarWeight = truckFullWeight,
                 Price = truckPrice,
                 Year = truckYear,
             });
@@ -125,18 +121,16 @@ namespace Custom.Cmd
             Console.WriteLine($"Full payment : {bikeResult} EUR");
         }
 
-        public static void SayHello() =>
-            Console.WriteLine("Hello! Welcome to the customs calculator");
+        public static void SayHello() => Console.WriteLine("Hello! Welcome to the customs calculator \n");
 
-        public static void SayBye() =>
-            Console.WriteLine("Bye!");
+        public static void SayBye() => Console.WriteLine("\n Bye!");
 
         public static void ShowCommands()
         {
             Console.WriteLine("Choose your vehicle:");
 
-            foreach (var key in CommandsNames.Keys)
-                Console.WriteLine($"{key} - {CommandsNames[key]}");
+            foreach (var key in _commandsNames.Keys)
+                Console.WriteLine($"{key} - {_commandsNames[key]}");
         }
 
         private static void ShowFuelTypes()

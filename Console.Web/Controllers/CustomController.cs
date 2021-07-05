@@ -7,13 +7,15 @@ using Web.ViewModels;
 
 namespace Web.Controllers
 {
-    public class HomeController : Controller
+    public class CustomController : Controller
     {
         private readonly ICustomService _customService;
 
-        public HomeController(ICustomService customService) => _customService = customService;
-      
-
+        public CustomController(ICustomService customService)
+        {
+            _customService = customService;
+        }
+        
         [HttpGet]
         public IActionResult Index()
         {
@@ -28,7 +30,7 @@ namespace Web.Controllers
                 CarType = model.CarType,
                 EngineVolume = model.EngineVolume,
                 FuelType = model.FuelType,
-                FuelWeight = model.CarWeight,
+                CarWeight = model.CarWeight,
                 Price = model.Price,
                 Year = model.Year,
             });

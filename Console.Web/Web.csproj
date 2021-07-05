@@ -31,7 +31,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Custom.Data\Custom.Data.csproj" />
     <ProjectReference Include="..\CustomBL\Custom.BL.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Models\" />
   </ItemGroup>
 
 </Project>
