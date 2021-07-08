@@ -24,10 +24,8 @@ namespace Custom.BL.Services
                 return engineVolume;
 
             if (price == default || year == default)
-            {
                 throw new ArgumentException(
                     "Price and Year are mandatory parameters for not Electric cars Custom calculating");
-            }
 
             var importDuty = GetImportDuty(price);
             var exciseValue = GetCarExciseValue(year, fuelType, engineVolume);
@@ -118,21 +116,32 @@ namespace Custom.BL.Services
             double rate = default;
 
             if (fullWeight < 5000)
-            {
-                if (totalYearsCount < 5) rate = 0.02;
-                else if (totalYearsCount > 5 && totalYearsCount < 8) rate = 0.8;
-                else if (totalYearsCount > 8) rate = 1;
-            }
-            else if (fullWeight > 5000)
-            {
-                if (totalYearsCount < 5) rate = 0.026;
-                else if (totalYearsCount > 5 && totalYearsCount < 8) rate = 1.04;
-                else if (totalYearsCount > 8) rate = 1.3;
-            }
+                rate = GetRateForTruckWhereWightMoreThan5000(totalYearsCount, rate);
+
+            if (fullWeight > 5000)
+                rate = GetRateForTruckWhereWightLessThan5000(totalYearsCount, rate);
 
             var res = rate * (engineVolume / 1000) * totalYearsCount;
 
             return (int) Math.Round(res, 0);
+        }
+
+        private static double GetRateForTruckWhereWightMoreThan5000(int totalYearsCount, double rate)
+        {
+            if (totalYearsCount < 5) rate = 0.02;
+            if (totalYearsCount > 5 && totalYearsCount < 8) rate = 0.8;
+            if (totalYearsCount > 8) rate = 1;
+           
+            return rate;
+        }
+
+        private static double GetRateForTruckWhereWightLessThan5000(int totalYearsCount, double rate)
+        {
+            if (totalYearsCount < 5) rate = 0.026;
+            if (totalYearsCount > 5 && totalYearsCount < 8) rate = 1.04;
+            if (totalYearsCount > 8) rate = 1.3;
+
+            return rate;
         }
 
         /// <summary>
@@ -145,8 +154,8 @@ namespace Custom.BL.Services
             double rate = default;
 
             if (engineVolume < 500) rate = 0.062;
-            else if (engineVolume > 500 && engineVolume < 800) rate = 0.443;
-            else if (engineVolume > 800) rate = 0.447;
+            if (engineVolume > 500 && engineVolume < 800) rate = 0.443;
+            if (engineVolume > 800) rate = 0.447;
 
             var res = rate * (engineVolume / 1000) * totalYearsCount;
 
@@ -168,25 +177,34 @@ namespace Custom.BL.Services
                     ? 0.007 
                     : 0.35;
             }
-            else if (fuelType == FuelType.Diesel)
+
+            if (fuelType == FuelType.Diesel)
             {
-                if (totalYearsCount < 8)
-                {
-                    rate = (engineVolume < 2500 && engineVolume > 5000)
-                        ? 0.007
-                        : 0.003;
-                }
-                else if (totalYearsCount > 8)
-                {
-                    rate = (engineVolume < 2500 && engineVolume > 5000)
-                        ? 0.35
-                        : 0.15;
-                }
+                rate = GetRateForBusVehicleType(engineVolume, totalYearsCount, rate);
             }
 
             var excise = rate * engineVolume / 1000 * totalYearsCount;
 
-            return (int) Math.Round(excise, 0);
+            return (int) Math.Round(excise, 0);            
+        }
+
+        private static double GetRateForBusVehicleType(int engineVolume, int totalYearsCount, double rate)
+        {
+            if (totalYearsCount < 8)
+            {
+                rate = (engineVolume < 2500 && engineVolume > 5000)
+                    ? 0.007
+                    : 0.003;
+            }
+
+            if (totalYearsCount > 8)
+            {
+                rate = (engineVolume < 2500 && engineVolume > 5000)
+                    ? 0.35
+                    : 0.15;
+            }
+
+            return rate;
         }
     }
 }

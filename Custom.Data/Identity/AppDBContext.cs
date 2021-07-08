@@ -6,8 +6,7 @@ namespace Web.Models
     {
         public DbSet<User> Users { get; set; }
 
-        public AppDBContext(DbContextOptions<AppDBContext> options)
-            : base(options)
+        public AppDBContext(DbContextOptions<AppDBContext> options): base(options)
         {
             Database.EnsureCreated();
         }
