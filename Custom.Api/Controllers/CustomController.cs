@@ -1,4 +1,5 @@
-﻿using Custom.BL.Models;
+﻿using Custom.Api.Models;
+using Custom.BL.Models;
 using Custom.BL.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -19,7 +20,7 @@ namespace Custom.Api.Controllers
         }
 
         [HttpPost("calculate")]
-        public int Calculate(CalculateModel dto) 
+        public int Calculate(CalculateDto dto) 
         {
             return _service.GetResult(new CalculateModel
             {
