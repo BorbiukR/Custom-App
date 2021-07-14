@@ -4,6 +4,6 @@ namespace Custom.BL.Services
 {
     public interface ICustomService
     {
-        int GetResult(CalculateModel model);
+        int GetResult(CalculateDTO model);
     }
 }

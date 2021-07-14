@@ -3,11 +3,13 @@ using Custom.BL.Enums;
 
 namespace Custom.BL.Models
 {
-    public class CalculateModel
+    public class CalculateDTO
     {
-        public CarType CarType { get; set; }
-       
-        public FuelType FuelType { get; set; }
+        public int CalculateDTOId { get; set; }
+
+        public CarTypeDTO CarType { get; set; }     
+        
+        public FuelTypeDTO FuelType { get; set; }
 
         public int EngineVolume { get; set; }
 

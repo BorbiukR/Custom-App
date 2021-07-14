@@ -6,21 +6,21 @@ namespace Custom.BL.Services
 {
     public class CustomCalculatorService : ICustomService
     {
-        public int GetResult(CalculateModel model)
+        public int GetResult(CalculateDTO model)
         {
             return model.CarType switch
             {
-                CarType.Car => GetCarCustomValue(model.FuelType, model.EngineVolume, model.Price, model.Year),
-                CarType.Truck => GetTruckCustomValue(model.Price, model.Year, model.EngineVolume, model.CarWeight),
-                CarType.Bus => GetBusCustomValue(model.Price, model.Year, model.EngineVolume, model.FuelType),
-                CarType.Bike => GetBikeCustomValue(model.Price, model.Year, model.EngineVolume),
+                CarTypeDTO.Car => GetCarCustomValue(model.FuelType, model.EngineVolume, model.Price, model.Year),
+                CarTypeDTO.Truck => GetTruckCustomValue(model.Price, model.Year, model.EngineVolume, model.CarWeight),
+                CarTypeDTO.Bus => GetBusCustomValue(model.Price, model.Year, model.EngineVolume, model.FuelType),
+                CarTypeDTO.Bike => GetBikeCustomValue(model.Price, model.Year, model.EngineVolume),
                 _ => throw new NotImplementedException()
             };
         }
 
-        private static int GetCarCustomValue(FuelType fuelType, int engineVolume, int price = default, DateTime year = default)
+        private static int GetCarCustomValue(FuelTypeDTO fuelType, int engineVolume, int price = default, DateTime year = default)
         {
-            if (fuelType == FuelType.Electric)
+            if (fuelType == FuelTypeDTO.Electric)
                 return engineVolume;
 
             if (price == default || year == default)
@@ -55,7 +55,7 @@ namespace Custom.BL.Services
             return fullPayment;
         }
 
-        private static int GetBusCustomValue(int price, DateTime year, int engineVolume, FuelType fuelType)
+        private static int GetBusCustomValue(int price, DateTime year, int engineVolume, FuelTypeDTO fuelType)
         {
             var importDuty = GetImportDuty(price);
             var exciseValue = GetBusExciseValue(year, engineVolume, fuelType);
@@ -86,14 +86,14 @@ namespace Custom.BL.Services
         /// <summary>
         /// Calculates excise duty for cars 
         /// </summary>
-        private static int GetCarExciseValue(DateTime year, FuelType fuelType, int engineVolume)
+        private static int GetCarExciseValue(DateTime year, FuelTypeDTO fuelType, int engineVolume)
         {
             var totalYearsCount = GetCountOfFullYears(year);
 
             var rate = fuelType switch
             {
-                FuelType.Diesel => engineVolume < 3000 ? 50 : 100,
-                FuelType.Gas => engineVolume < 3500 ? 75 : 150,
+                FuelTypeDTO.Diesel => engineVolume < 3000 ? 50 : 100,
+                FuelTypeDTO.Gas => engineVolume < 3500 ? 75 : 150,
                 _ => throw new ArgumentException("Invalid Fuel Type for Rate calculating")
             };
 
@@ -165,20 +165,20 @@ namespace Custom.BL.Services
         /// <summary>
         /// Calculates excise duty for buses
         /// </summary>
-        private static int GetBusExciseValue(DateTime year, int engineVolume, FuelType fuelType)
+        private static int GetBusExciseValue(DateTime year, int engineVolume, FuelTypeDTO fuelType)
         {
             var totalYearsCount = GetCountOfFullYears(year);
 
             double rate = default;
 
-            if (fuelType == FuelType.Gas)
+            if (fuelType == FuelTypeDTO.Gas)
             {
                 rate = totalYearsCount < 8 
                     ? 0.007 
                     : 0.35;
             }
 
-            if (fuelType == FuelType.Diesel)
+            if (fuelType == FuelTypeDTO.Diesel)
             {
                 rate = GetRateForBusVehicleType(engineVolume, totalYearsCount, rate);
             }

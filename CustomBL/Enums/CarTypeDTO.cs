@@ -1,6 +1,6 @@
 ﻿namespace Custom.BL.Enums
 {
-    public enum CarType
+    public enum CarTypeDTO
     {
         Car,
         Truck,

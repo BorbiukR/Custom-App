@@ -58,11 +58,11 @@ namespace Custom.Cmd
             }
         }
 
-        public static FuelType ParseFuelType()
+        public static FuelTypeDTO ParseFuelType()
         {
             while (true)
             {               
-                if (Enum.TryParse(Console.ReadLine(), out FuelType value))
+                if (Enum.TryParse(Console.ReadLine(), out FuelTypeDTO value))
                     return value;
 
                 Console.WriteLine($"\nNot the correct fuel type format");

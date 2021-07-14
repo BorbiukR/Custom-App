@@ -1,5 +1,4 @@
-﻿using Custom.Api.Models;
-using Custom.BL.Models;
+﻿using Custom.BL.Models;
 using Custom.BL.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -20,9 +19,9 @@ namespace Custom.Api.Controllers
         }
 
         [HttpPost("calculate")]
-        public int Calculate(CalculateDto dto) 
+        public int Calculate(CalculateDTO dto) 
         {
-            return _service.GetResult(new CalculateModel
+            return _service.GetResult(new CalculateDTO
             {
                 CarType = dto.CarType,
                 EngineVolume = dto.EngineVolume,

@@ -25,7 +25,7 @@ namespace Web.Controllers
         [HttpPost]
         public IActionResult Index(CustomViewModel model)
         {
-            model.Result = _customService.GetResult(new CalculateModel
+            model.Result = _customService.GetResult(new CalculateDTO
             {
                 CarType = model.CarType,
                 EngineVolume = model.EngineVolume,

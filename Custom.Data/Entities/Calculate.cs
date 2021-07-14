@@ -1,12 +1,15 @@
 ﻿using System;
-using Custom.BL.Enums;
+using System.ComponentModel.DataAnnotations;
 
-namespace Custom.Api.Models
+namespace Custom.DAL.Entities
 {
-    public class CalculateDto
+    public class Calculate
     {
+        [Key]
+        public int CalculateId { get; set; }
+
         public CarType CarType { get; set; }
-       
+
         public FuelType FuelType { get; set; }
 
         public int EngineVolume { get; set; }

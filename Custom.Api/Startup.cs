@@ -1,15 +1,18 @@
 using Custom.BL.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
+using Web.Models;
 
 namespace Custom.Api
 {
     public class Startup
     {
         public IConfiguration Configuration { get; }
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -20,6 +23,9 @@ namespace Custom.Api
             services.AddControllers();
 
             services.AddScoped<ICustomService, CustomCalculatorService>();
+
+            string connection = Configuration.GetConnectionString("DefaultConnection");
+            services.AddDbContext<AppDBContext>(options => options.UseSqlServer(connection));
 
             services.AddSwaggerGen(c =>
             {

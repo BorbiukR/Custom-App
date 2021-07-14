@@ -31,7 +31,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Custom.Data\Custom.Data.csproj" />
+    <ProjectReference Include="..\Custom.Data\Custom.DAL.csproj" />
     <ProjectReference Include="..\CustomBL\Custom.BL.csproj" />
   </ItemGroup>
 

@@ -10,7 +10,7 @@ namespace Custom.Cmd
     public class ProcessLogicUI
     {
         private static ICustomService _customService;
-
+      
         /// <summary>
         /// Service that calculate custom of cars.
         /// </summary>
@@ -54,11 +54,11 @@ namespace Custom.Cmd
 
             var fuelType = Parsing.ParseFuelType();
 
-            if (fuelType == FuelType.Electric)
+            if (fuelType == FuelTypeDTO.Electric)
             {
                 var carEnginePower = Parsing.ParseInt("engine power in KW");
 
-                var electricCarResult = CustomService.GetResult(new CalculateModel
+                var electricCarResult = CustomService.GetResult(new CalculateDTO
                 {
                     FuelType = fuelType,
                     EngineVolume = carEnginePower,
@@ -72,9 +72,9 @@ namespace Custom.Cmd
                 var carYear = Parsing.ParseDateTime("year");
                 var carEngineVolume = Parsing.ParseInt("engine volume in cubic centimeters");
 
-                var carResult = CustomService.GetResult(new CalculateModel
+                var carResult = CustomService.GetResult(new CalculateDTO
                 {
-                    CarType = CarType.Car,
+                    CarType = CarTypeDTO.Car,
                     EngineVolume = carEngineVolume,
                     FuelType = fuelType,
                     Year = carYear,
@@ -92,9 +92,9 @@ namespace Custom.Cmd
             var truckEngineVolume = Parsing.ParseInt("engine volume in cubic centimeters");
             var truckFullWeight = Parsing.ParseInt("full weight in kilograms");
 
-            var truckResult = CustomService.GetResult(new CalculateModel
+            var truckResult = CustomService.GetResult(new CalculateDTO
             {
-                CarType = CarType.Truck,
+                CarType = CarTypeDTO.Truck,
                 EngineVolume = truckEngineVolume,
                 CarWeight = truckFullWeight,
                 Price = truckPrice,
@@ -110,9 +110,9 @@ namespace Custom.Cmd
             var bikeYear = Parsing.ParseDateTime("year");
             var bikeEngineVolume = Parsing.ParseInt("engine volume in cubic centimeters");
 
-            var bikeResult = CustomService.GetResult(new CalculateModel
+            var bikeResult = CustomService.GetResult(new CalculateDTO
             {
-                CarType = CarType.Bike,
+                CarType = CarTypeDTO.Bike,
                 Price = bikePrice,
                 Year = bikeYear,
                 EngineVolume = bikeEngineVolume,
@@ -135,16 +135,16 @@ namespace Custom.Cmd
 
         private static void ShowFuelTypes()
         {
-            var fuelTypes = Enum.GetValues(typeof(FuelType)).Cast<FuelType>();
+            var fuelTypes = Enum.GetValues(typeof(FuelTypeDTO)).Cast<FuelTypeDTO>();
 
             foreach (var fuelType in fuelTypes)
             {
                 var fuelTypeValue = (int)fuelType;
                 int key = fuelTypeValue switch
                 {
-                    1 => (int)FuelType.Diesel,
-                    2 => (int)FuelType.Gas,
-                    3 => (int)FuelType.Electric,
+                    1 => (int)FuelTypeDTO.Diesel,
+                    2 => (int)FuelTypeDTO.Gas,
+                    3 => (int)FuelTypeDTO.Electric,
                     _ => throw new ArgumentException("Invalid Fuel Type number")
                 };
 
