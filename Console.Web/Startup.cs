@@ -12,6 +12,7 @@ namespace Web
     public class Startup
     {
         public IConfiguration Configuration { get; }
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -19,7 +20,7 @@ namespace Web
 
         public void ConfigureServices(IServiceCollection services)
         {        
-            services.AddScoped<ICustomService, CustomCalculatorService>();
+            services.AddScoped<ICustomsService, CustomsCalculatorService>();
 
             string connection = Configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<AppDBContext>(options => options.UseSqlServer(connection));

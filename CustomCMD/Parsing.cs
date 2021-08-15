@@ -1,4 +1,4 @@
-﻿using Custom.BL.Enums;
+﻿using Custom.DAL.Entities;
 using System;
 
 namespace Custom.Cmd
@@ -58,11 +58,11 @@ namespace Custom.Cmd
             }
         }
 
-        public static FuelTypeDTO ParseFuelType()
+        public static FuelType ParseFuelType()
         {
             while (true)
             {               
-                if (Enum.TryParse(Console.ReadLine(), out FuelTypeDTO value))
+                if (Enum.TryParse(Console.ReadLine(), out FuelType value))
                     return value;
 
                 Console.WriteLine($"\nNot the correct fuel type format");

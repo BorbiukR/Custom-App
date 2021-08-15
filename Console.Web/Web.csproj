@@ -32,6 +32,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Custom.Data\Custom.DAL.csproj" />
+    <ProjectReference Include="..\CustomApp.Common\CustomApp.Common.csproj" />
     <ProjectReference Include="..\CustomBL\Custom.BL.csproj" />
   </ItemGroup>
 

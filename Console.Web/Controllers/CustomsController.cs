@@ -4,14 +4,15 @@ using Web.Models;
 using Custom.BL.Models;
 using Custom.BL.Services;
 using Web.ViewModels;
+using System.Threading.Tasks;
 
 namespace Web.Controllers
 {
-    public class CustomController : Controller
+    public class CustomsController : Controller
     {
-        private readonly ICustomService _customService;
+        private readonly ICustomsService _customService;
 
-        public CustomController(ICustomService customService)
+        public CustomsController(ICustomsService customService)
         {
             _customService = customService;
         }
@@ -23,14 +24,14 @@ namespace Web.Controllers
         }
 
         [HttpPost]
-        public IActionResult Index(CustomViewModel model)
+        public async Task<IActionResult> Index(CustomsViewModel model)
         {
-            model.Result = _customService.GetResult(new CalculateDTO
+            model.Result = await _customService.GetResult(new CustomsDataDTO
             {
-                CarType = model.CarType,
+                VehicleType = model.CarType,
                 EngineVolume = model.EngineVolume,
                 FuelType = model.FuelType,
-                CarWeight = model.CarWeight,
+                VehicleWeight = model.CarWeight,
                 Price = model.Price,
                 Year = model.Year,
             });

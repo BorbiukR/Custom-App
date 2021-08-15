@@ -13,4 +13,8 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\CustomApp.Common\CustomApp.Common.csproj" />
+  </ItemGroup>
+
 </Project>

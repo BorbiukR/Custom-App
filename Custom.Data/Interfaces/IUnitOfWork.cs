@@ -1,11 +1,10 @@
-﻿using Custom.DAL.Entities;
-using System;
+﻿using System.Threading.Tasks;
 
 namespace Custom.DAL.Interfaces
 {
-    public interface IUnitOfWork : IDisposable
+    public interface IUnitOfWork 
     {
-        public IRepository<Calculate> Calculates { get; }
-        public void Save();
+        ICustomsRepository CustomsRepository { get; }
+        Task<int> SaveAsync();
     }
 }

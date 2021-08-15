@@ -1,6 +1,6 @@
-﻿namespace Custom.BL.Enums
+﻿namespace Custom.DAL.Entities
 {
-    public enum CarTypeDTO
+    public enum VehicleType
     {
         Car,
         Truck,

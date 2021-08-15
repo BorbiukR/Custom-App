@@ -2,6 +2,7 @@
 using Custom.BL.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System.Threading.Tasks;
 
 namespace Custom.Api.Controllers
 {
@@ -10,23 +11,23 @@ namespace Custom.Api.Controllers
     public class CustomController : ControllerBase
     {
         private readonly ILogger<CustomController> _logger;
-        private readonly ICustomService _service;
+        private readonly ICustomsService _service;
 
-        public CustomController(ILogger<CustomController> logger, ICustomService service)
+        public CustomController(ILogger<CustomController> logger, ICustomsService service)
         {
             _logger = logger;
             _service = service;
         }
 
-        [HttpPost("calculate")]
-        public int Calculate(CalculateDTO dto) 
+        [HttpPost("calculate/car")]
+        public async Task<int> CalculateForCar(CustomsDataDTO dto) 
         {
-            return _service.GetResult(new CalculateDTO
+            return await _service.GetResult(new CustomsDataDTO
             {
-                CarType = dto.CarType,
+                VehicleType = dto.VehicleType,
                 EngineVolume = dto.EngineVolume,
                 FuelType = dto.FuelType,
-                CarWeight = dto.CarWeight,
+                VehicleWeight = dto.VehicleWeight,
                 Price = dto.Price,
                 Year = dto.Year,
             });

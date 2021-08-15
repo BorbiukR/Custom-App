@@ -22,7 +22,7 @@ namespace Custom.Api
         {
             services.AddControllers();
 
-            services.AddScoped<ICustomService, CustomCalculatorService>();
+            services.AddScoped<ICustomsService, CustomsCalculatorService>();
 
             string connection = Configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<AppDBContext>(options => options.UseSqlServer(connection));
@@ -39,7 +39,6 @@ namespace Custom.Api
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            //app.UseSwagger(c => { c.SerializeAsV2 = true; });
             app.UseSwagger();
 
             app.UseSwaggerUI(c =>
@@ -51,8 +50,6 @@ namespace Custom.Api
             app.UseHttpsRedirection();
 
             app.UseRouting();
-
-            app.UseAuthorization();
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }

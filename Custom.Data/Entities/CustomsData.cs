@@ -3,12 +3,12 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Custom.DAL.Entities
 {
-    public class Calculate
+    public class CustomsData
     {
         [Key]
-        public int CalculateId { get; set; }
+        public int CustomsDataId { get; set; }
 
-        public CarType CarType { get; set; }
+        public VehicleType VehicleType { get; set; }
 
         public FuelType FuelType { get; set; }
 
@@ -18,6 +18,6 @@ namespace Custom.DAL.Entities
 
         public DateTime Year { get; set; }
 
-        public int CarWeight { get; set; }
+        public int VehicleWeight { get; set; }
     }
 }

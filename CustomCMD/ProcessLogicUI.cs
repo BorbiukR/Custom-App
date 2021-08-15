@@ -1,20 +1,25 @@
-﻿using Custom.BL.Enums;
-using Custom.BL.Services;
+﻿using Custom.BL.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using Custom.BL.Models;
+using Custom.DAL.Entities;
 
 namespace Custom.Cmd
 {
     public class ProcessLogicUI
     {
-        private static ICustomService _customService;
-      
+        private static ICustomsService _customService;
+
+        public ProcessLogicUI(ICustomsService customService)
+        {
+            _customService = customService;
+        }
+            
         /// <summary>
         /// Service that calculate custom of cars.
         /// </summary>
-        private static ICustomService CustomService => _customService ??= new CustomCalculatorService();
+        //private static ICustomsService CustomService => _customService ??= new CustomCalculatorService();
 
         private static readonly Dictionary<ConsoleKey, string> _commandsNames = new Dictionary<ConsoleKey, string>
         {
@@ -54,11 +59,11 @@ namespace Custom.Cmd
 
             var fuelType = Parsing.ParseFuelType();
 
-            if (fuelType == FuelTypeDTO.Electric)
+            if (fuelType == FuelType.Electric)
             {
                 var carEnginePower = Parsing.ParseInt("engine power in KW");
 
-                var electricCarResult = CustomService.GetResult(new CalculateDTO
+                var electricCarResult = _customService.GetResult(new CustomsDataDTO
                 {
                     FuelType = fuelType,
                     EngineVolume = carEnginePower,
@@ -72,9 +77,9 @@ namespace Custom.Cmd
                 var carYear = Parsing.ParseDateTime("year");
                 var carEngineVolume = Parsing.ParseInt("engine volume in cubic centimeters");
 
-                var carResult = CustomService.GetResult(new CalculateDTO
+                var carResult = _customService.GetResult(new CustomsDataDTO
                 {
-                    CarType = CarTypeDTO.Car,
+                    VehicleType = VehicleType.Car,
                     EngineVolume = carEngineVolume,
                     FuelType = fuelType,
                     Year = carYear,
@@ -92,11 +97,11 @@ namespace Custom.Cmd
             var truckEngineVolume = Parsing.ParseInt("engine volume in cubic centimeters");
             var truckFullWeight = Parsing.ParseInt("full weight in kilograms");
 
-            var truckResult = CustomService.GetResult(new CalculateDTO
+            var truckResult = _customService.GetResult(new CustomsDataDTO
             {
-                CarType = CarTypeDTO.Truck,
+                VehicleType = VehicleType.Truck,
                 EngineVolume = truckEngineVolume,
-                CarWeight = truckFullWeight,
+                VehicleWeight = truckFullWeight,
                 Price = truckPrice,
                 Year = truckYear,
             });
@@ -110,9 +115,9 @@ namespace Custom.Cmd
             var bikeYear = Parsing.ParseDateTime("year");
             var bikeEngineVolume = Parsing.ParseInt("engine volume in cubic centimeters");
 
-            var bikeResult = CustomService.GetResult(new CalculateDTO
+            var bikeResult = _customService.GetResult(new CustomsDataDTO
             {
-                CarType = CarTypeDTO.Bike,
+                VehicleType = VehicleType.Bike,
                 Price = bikePrice,
                 Year = bikeYear,
                 EngineVolume = bikeEngineVolume,
@@ -135,16 +140,16 @@ namespace Custom.Cmd
 
         private static void ShowFuelTypes()
         {
-            var fuelTypes = Enum.GetValues(typeof(FuelTypeDTO)).Cast<FuelTypeDTO>();
+            var fuelTypes = Enum.GetValues(typeof(FuelType)).Cast<FuelType>();
 
             foreach (var fuelType in fuelTypes)
             {
                 var fuelTypeValue = (int)fuelType;
                 int key = fuelTypeValue switch
                 {
-                    1 => (int)FuelTypeDTO.Diesel,
-                    2 => (int)FuelTypeDTO.Gas,
-                    3 => (int)FuelTypeDTO.Electric,
+                    1 => (int)FuelType.Diesel,
+                    2 => (int)FuelType.Gas,
+                    3 => (int)FuelType.Electric,
                     _ => throw new ArgumentException("Invalid Fuel Type number")
                 };
 

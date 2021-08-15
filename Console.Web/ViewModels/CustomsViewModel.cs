@@ -1,17 +1,17 @@
+using Custom.DAL.Entities;
 using System;
 using System.ComponentModel.DataAnnotations;
-using Custom.BL.Enums;
 
 namespace Web.Models
 {
-    public class CustomViewModel
+    public class CustomsViewModel
     {
         [Display(Name = "Car Type")]
-        public CarTypeDTO CarType { get; set; }
+        public VehicleType CarType { get; set; }
 
 
         [Display(Name = "Fuel Type")]
-        public FuelTypeDTO FuelType { get; set; }
+        public FuelType FuelType { get; set; }
 
 
         [Display(Name = "Engine Volume")]
