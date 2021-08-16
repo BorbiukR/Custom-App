@@ -1,16 +1,10 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
 
-namespace Custom.DAL.Entities
+namespace Custom.Api.Models.Request
 {
-    public class CustomsData
+    public class CustomsTruckRequest
     {
-        [Key]
         public int Id { get; set; }
-
-        public VehicleType VehicleType { get; set; }
-
-        public FuelType FuelType { get; set; }
 
         public int EngineVolume { get; set; }
 

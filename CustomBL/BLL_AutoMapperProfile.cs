@@ -8,9 +8,7 @@ namespace Custom.BL
     {
         public BLL_AutoMapperProfile()
         {
-            CreateMap<CustomsData, CustomsDataDTO>()
-                .ForMember(p => p.Id, c => c.MapFrom(card => card.CustomsDataId))
-                .ReverseMap();
+            CreateMap<CustomsData, CustomsDataDTO>().ReverseMap();
         }
     }
 }

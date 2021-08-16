@@ -1,12 +1,12 @@
-﻿@using Custom.BL.Enums
-@model CustomViewModel
+﻿@using Custom.DAL.Entities
+@model CustomsViewModel
 
  <form asp-controller="Home" asp-action="Index" method="post">
      <div class="form-group">
 
          <div class="row" id="CarType">
              <label asp-for="CarType" class="col-lg-2"></label>
-             <select  asp-for="CarType" class="col-lg-2" asp-items="Html.GetEnumSelectList<CarType>()">
+             <select  asp-for="CarType" class="col-lg-2" asp-items="Html.GetEnumSelectList<VehicleType>()">
                  <option disabled selected value="">Select Сar Type</option>
              </select>
          </div>
