@@ -1,10 +1,11 @@
-﻿using System;
+﻿using Custom.DAL.Entities;
+using System;
 
 namespace Custom.Api.Models.Request
 {
     public class CustomsTruckRequest
     {
-        public int Id { get; set; }
+        public VehicleType VehicleType { get; set; } = VehicleType.Truck;
 
         public int EngineVolume { get; set; }
 

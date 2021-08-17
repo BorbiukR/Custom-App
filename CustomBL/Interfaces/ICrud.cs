@@ -9,6 +9,8 @@ namespace Custom.BL.Interfaces
 
         Task<TModel> GetByIdAsync(int id);
 
+        Task AddAsync(TModel model);
+
         Task UpdateAsync(TModel model);
 
         Task DeleteAsync(TModel model);

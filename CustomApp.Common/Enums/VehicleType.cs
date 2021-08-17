@@ -3,6 +3,7 @@
     public enum VehicleType
     {
         Car,
+        ElectricCar,
         Truck,
         Bike,
         Bus,

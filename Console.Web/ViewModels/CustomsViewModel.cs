@@ -6,8 +6,8 @@ namespace Web.Models
 {
     public class CustomsViewModel
     {
-        [Display(Name = "Car Type")]
-        public VehicleType CarType { get; set; }
+        [Display(Name = "Vehicle Type")]
+        public VehicleType VehicleType { get; set; }
 
 
         [Display(Name = "Fuel Type")]
@@ -26,8 +26,8 @@ namespace Web.Models
         public DateTime Year { get; set; }
 
 
-        [Display(Name = "Car Weight")]
-        public int CarWeight { get; set; }
+        [Display(Name = "Vehicle Weight")]
+        public int VehicleWeight { get; set; }
 
 
         [Display(Name = "Result")]

@@ -8,11 +8,11 @@ namespace Custom.Api
     {
         public API_AutoMapperProfile()
         {
-            CreateMap<CustomsBusRequest, CustomsDataDTO>().ReverseMap();
-            CreateMap<CustomsBikeRequest, CustomsDataDTO>().ReverseMap();
-            CreateMap<CustomsCarRequest, CustomsDataDTO>().ReverseMap();
-            CreateMap<CustomsElectricCarRequest, CustomsDataDTO>().ReverseMap();
-            CreateMap<CustomsTruckRequest, CustomsDataDTO>().ReverseMap();
+            CreateMap<CustomsBusRequest, CustomsDataDTO>();
+            CreateMap<CustomsBikeRequest, CustomsDataDTO>();
+            CreateMap<CustomsCarRequest, CustomsDataDTO>();
+            CreateMap<CustomsElectricCarRequest, CustomsDataDTO>();
+            CreateMap<CustomsTruckRequest, CustomsDataDTO>();
         }     
     }
 }

@@ -4,9 +4,9 @@
  <form asp-controller="Home" asp-action="Index" method="post">
      <div class="form-group">
 
-         <div class="row" id="CarType">
-             <label asp-for="CarType" class="col-lg-2"></label>
-             <select  asp-for="CarType" class="col-lg-2" asp-items="Html.GetEnumSelectList<VehicleType>()">
+         <div class="row" id="VehicleType">
+             <label asp-for="VehicleType" class="col-lg-2"></label>
+             <select  asp-for="VehicleType" class="col-lg-2" asp-items="Html.GetEnumSelectList<VehicleType>()">
                  <option disabled selected value="">Select Сar Type</option>
              </select>
          </div>
@@ -34,8 +34,8 @@
          </div>
 
          <div class="row" id="CarWeight">
-             <label asp-for="CarWeight" class="col-lg-2"></label>
-             <input type="number" asp-for="CarWeight" class="col-lg-2" />
+             <label asp-for="VehicleWeight" class="col-lg-2"></label>
+             <input type="number" asp-for="VehicleWeight" class="col-lg-2" />
          </div>
 
          <div class="row">

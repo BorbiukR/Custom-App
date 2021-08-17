@@ -5,7 +5,7 @@ namespace Custom.Api.Models.Request
 {
     public class CustomsBusRequest
     {
-        public int Id { get; set; }
+        public VehicleType VehicleType { get; set; } = VehicleType.Bus;
 
         public FuelType FuelType { get; set; }
 

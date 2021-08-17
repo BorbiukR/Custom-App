@@ -4,7 +4,7 @@ using Custom.BL.Models;
 using Custom.BL.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using System.Threading.Tasks;
+using System;
 
 namespace Custom.Api.Controllers
 {
@@ -12,6 +12,8 @@ namespace Custom.Api.Controllers
     [Route("[controller]")]
     public class CustomsController : ControllerBase
     {
+        // TODO: пофіксити формат часу ("dd/mm/yyyy")
+
         private readonly ILogger<CustomsController> _logger;
         private readonly ICustomsService _service;
         private readonly IMapper _mapper;
@@ -23,84 +25,99 @@ namespace Custom.Api.Controllers
             _mapper = mapper;
         }
 
-        //public IActionResult AddToTask(Guid employeeId, [FromBody] EmployeeTaskRequest employeeTask)
-        //{
-        //    try
-        //    {
-        //        employeeTask.EmployeeId = employeeId;
-        //        var added = employeeService.AddToTask(mapper.Map<EmployeeTaskDto>(employeeTask));
-        //        if (!added)
-        //        {
-        //            return StatusCode(404, "Task not found");
-        //        }
-        //        return StatusCode(201, "Added");
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return StatusCode(500, ex);
-        //    }
-        //}
-
         [HttpPost("calculate/car/electric")]
-        public async Task<int> CalculateForElectricCar([FromBody] CustomsElectricCarRequest request) 
+        public IActionResult CalculateForElectricCar([FromBody] CustomsElectricCarRequest request) 
         {
-            return await _service.GetResult(new CustomsDataDTO
+            try
             {
-                Id = request.Id,
-                EngineVolume = request.EngineVolume,
-                FuelType = request.FuelType,
-            });
+                var res = _service.GetResult(_mapper.Map<CustomsDataDTO>(request));
+
+                _logger.LogInformation("Calculate customs for electric car successfully");
+
+                return StatusCode(200, $"The sum of all payments: {res} Euro");
+            }
+            catch (Exception)
+            {
+                _logger.LogInformation("Calculate customs for electric car NOT successfully");
+
+                return StatusCode(500, "Model is not valid. Check the input");
+            }
         }
 
         [HttpPost("calculate/car")]
-        public async Task<int> CalculateForCar([FromBody] CustomsCarRequest request)
+        public IActionResult CalculateForCar([FromBody] CustomsCarRequest request)
         {
-            return await _service.GetResult(new CustomsDataDTO
+            try
             {
-                Id = request.Id,
-                EngineVolume = request.EngineVolume,
-                FuelType = request.FuelType,
-                Price = request.Price,
-                Year = request.Year,
-            });
+                var res = _service.GetResult(_mapper.Map<CustomsDataDTO>(request));
+
+                _logger.LogInformation("Calculate customs for car successfully");
+
+                return StatusCode(200, $"The sum of all payments: {res} Euro");
+            }
+            catch (Exception)
+            {
+                _logger.LogInformation("Calculate customs for car NOT successfully");
+
+                return StatusCode(500, "Model is not valid. Check the input");
+            }
         }
 
         [HttpPost("calculate/bus")]
-        public async Task<int> CalculateForBus([FromBody] CustomsBusRequest request)
+        public IActionResult CalculateForBus([FromBody] CustomsBusRequest request)
         {
-            return await _service.GetResult(new CustomsDataDTO
+            try
             {
-                Id = request.Id,
-                EngineVolume = request.EngineVolume,
-                FuelType = request.FuelType,
-                Price = request.Price,
-                Year = request.Year,
-            });
+                var res = _service.GetResult(_mapper.Map<CustomsDataDTO>(request));
+
+                _logger.LogInformation("Calculate customs for bus successfully");
+
+                return StatusCode(200, $"The sum of all payments: {res} Euro");
+            }
+            catch (Exception)
+            {
+                _logger.LogInformation("Calculate customs for bus NOT successfully");
+
+                return StatusCode(500, "Model is not valid. Check the input");
+            }
         }
 
         [HttpPost("calculate/bike")]
-        public async Task<int> CalculateForBike([FromBody] CustomsBikeRequest request)
+        public IActionResult CalculateForBike([FromBody] CustomsBikeRequest request)
         {
-            return await _service.GetResult(new CustomsDataDTO
+            try
             {
-                Id = request.Id,
-                EngineVolume = request.EngineVolume,
-                Price = request.Price,
-                Year = request.Year,
-            });
+                var res = _service.GetResult(_mapper.Map<CustomsDataDTO>(request));
+
+                _logger.LogInformation("Calculate customs for bike successfully");
+
+                return StatusCode(200, $"The sum of all payments: {res} Euro");
+            }
+            catch (Exception)
+            {
+                _logger.LogInformation("Calculate customs for bike NOT successfully");
+
+                return StatusCode(500, "Model is not valid. Check the input");
+            }
         }
 
         [HttpPost("calculate/truck")]
-        public async Task<int> CalculateForTruck([FromBody] CustomsTruckRequest request)
+        public IActionResult CalculateForTruck([FromBody] CustomsTruckRequest request)
         {
-            return await _service.GetResult(new CustomsDataDTO
+            try
             {
-                Id = request.Id,
-                EngineVolume = request.EngineVolume,
-                VehicleWeight = request.VehicleWeight,
-                Price = request.Price,
-                Year = request.Year,
-            });
+                var res = _service.GetResult(_mapper.Map<CustomsDataDTO>(request));
+
+                _logger.LogInformation("Calculate customs for truck successfully");
+
+                return StatusCode(200, $"The sum of all payments: {res} Euro");
+            }
+            catch (Exception)
+            {
+                _logger.LogInformation("Calculate customs for truck NOT successfully");
+
+                return StatusCode(500, "Model is not valid. Check the input");
+            }
         }
     }
 }

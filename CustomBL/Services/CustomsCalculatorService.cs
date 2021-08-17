@@ -21,32 +21,38 @@ namespace Custom.BL.Services
             _mapper = mapper;
         }
 
-        public async Task<int> GetResult(CustomsDataDTO customsData)
+        public int GetResult(CustomsDataDTO customsData)
         {
-            ValidationAllProperties(customsData);
-
-            var mappedCustomsData = _mapper.Map<CustomsData>(customsData);
-            await _unit.CustomsRepository.AddAsync(mappedCustomsData);
-            await _unit.SaveAsync();
+            if (customsData == null)
+                throw new CustomsException("Customs Data is null");
 
             return customsData.VehicleType switch
             {
-                VehicleType.Car => GetCarCustomValue(customsData.FuelType, customsData.EngineVolume, customsData.Price, customsData.Year),
-                VehicleType.Truck => GetTruckCustomValue(customsData.Price, customsData.Year, customsData.EngineVolume, customsData.VehicleWeight),
-                VehicleType.Bus => GetBusCustomValue(customsData.Price, customsData.Year, customsData.EngineVolume, customsData.FuelType),
-                VehicleType.Bike => GetBikeCustomValue(customsData.Price, customsData.Year, customsData.EngineVolume),
-                _ => throw new NotImplementedException()
+                VehicleType.Car =>
+                    GetCarCustomValue(customsData.FuelType, customsData.EngineVolume, customsData.Price, customsData.Year),
+                VehicleType.ElectricCar => 
+                    GetElectricCarCustomValue(customsData.FuelType, customsData.EngineVolume),
+                VehicleType.Truck => 
+                    GetTruckCustomValue(customsData.Price, customsData.Year, customsData.EngineVolume, customsData.VehicleWeight),
+                VehicleType.Bus => 
+                    GetBusCustomValue(customsData.Price, customsData.Year, customsData.EngineVolume, customsData.FuelType),
+                VehicleType.Bike => 
+                    GetBikeCustomValue(customsData.Price, customsData.Year, customsData.EngineVolume),
+                _ => 
+                    throw new NotImplementedException()
             };      
         }
 
-        private int GetCarCustomValue(FuelType fuelType, int engineVolume, int price = default, DateTime year = default)
+        private int GetCarCustomValue(FuelType fuelType, int engineVolume, int price, DateTime year)
         {
-            if (fuelType == FuelType.Electric)
-                return engineVolume;
+            if (engineVolume < 10 || engineVolume > 30_000)
+                throw new CustomsException("Engine volume is not valid");
 
-            if (price == default || year == default)
-                throw new ArgumentException(
-                    "Price and Year are mandatory parameters for not Electric cars Custom calculating");
+            if (price < 50 || price > 100_000_000)
+                throw new CustomsException("Price is not valid");
+
+            if (year > DateTime.Now || year < new DateTime(1850))
+                throw new CustomsException("Year is not valid");
 
             var importDuty = GetImportDuty(price);
             var exciseValue = GetCarExciseValue(year, fuelType, engineVolume);
@@ -56,8 +62,31 @@ namespace Custom.BL.Services
             return fullPayment;
         }
 
+        private int GetElectricCarCustomValue(FuelType fuelType, int engineVolume)
+        {
+            if (engineVolume < 10 || engineVolume > 30_000)
+                throw new CustomsException("Engine volume is not valid");
+
+            if (fuelType != FuelType.Electric)
+                throw new CustomsException("Fuel Type can not be another than Electric");
+
+            return engineVolume;
+        }
+
         private int GetTruckCustomValue(int price, DateTime year, int engineVolume, int fullWeight)
         {
+            if (engineVolume < 10 || engineVolume > 30_000)
+                throw new CustomsException("Engine volume is not valid");
+
+            if (price < 50 || price > 100_000_000)
+                throw new CustomsException("Price is not valid");
+
+            if (year > DateTime.Now || year < new DateTime(1850))
+                throw new CustomsException("Year is not valid");
+
+            if (fullWeight > 100_000 || fullWeight < 10)
+                throw new CustomsException("Vehicle weight is not valid");
+
             var importDuty = GetImportDuty(price);
             var exciseValue = GetTruckExciseValue(year, fullWeight, engineVolume);
             var vat = GetVat(price, importDuty, exciseValue);
@@ -68,6 +97,15 @@ namespace Custom.BL.Services
 
         private int GetBikeCustomValue(int price, DateTime year, int engineVolume)
         {
+            if (engineVolume < 10 || engineVolume > 30_000)
+                throw new CustomsException("Engine volume is not valid");
+
+            if (price < 50 || price > 100_000_000)
+                throw new CustomsException("Price is not valid");
+
+            if (year > DateTime.Now || year < new DateTime(1850))
+                throw new CustomsException("Year is not valid");
+
             var importDuty = GetImportDuty(price);
             var exciseValue = GetBikeExciseValue(year, engineVolume);
             var vat = GetVat(price, importDuty, exciseValue);
@@ -78,6 +116,15 @@ namespace Custom.BL.Services
 
         private int GetBusCustomValue(int price, DateTime year, int engineVolume, FuelType fuelType)
         {
+            if (engineVolume < 10 || engineVolume > 30_000)
+                throw new CustomsException("Engine volume is not valid");
+
+            if (price < 50 || price > 100_000_000)
+                throw new CustomsException("Price is not valid");
+
+            if (year > DateTime.Now || year < new DateTime(1850))
+                throw new CustomsException("Year is not valid");
+
             var importDuty = GetImportDuty(price);
             var exciseValue = GetBusExciseValue(year, engineVolume, fuelType);
             var vat = GetVat(price, importDuty, exciseValue);
@@ -226,19 +273,6 @@ namespace Custom.BL.Services
             return rate;
         }
 
-        private void ValidationAllProperties(CustomsDataDTO model)
-        {
-            if (model.Id == 0 ||
-                model.Price == 0 || model.Price > 100_000_000 ||
-                model.VehicleWeight < 50 || model.VehicleWeight > 40_000 ||
-                model.EngineVolume < 10 || model.EngineVolume > 15000 ||
-                model.Year == DateTime.Now || model.Year < new DateTime(1800, 1, 1) ||
-                model.VehicleType == 0 || model.FuelType == 0)
-            {
-                throw new CustomsException("Calculate model is not valid");
-            }
-        }
-
         public IEnumerable<CustomsDataDTO> GetAll()
         {
             var customsData = _unit.CustomsRepository.GetAll().ToList();
@@ -257,6 +291,15 @@ namespace Custom.BL.Services
                 return null;
 
             return _mapper.Map<CustomsDataDTO>(book);
+        }
+
+        public Task AddAsync(CustomsDataDTO customsData)
+        {
+            var mappedCustomsData = _mapper.Map<CustomsData>(customsData);
+
+            _unit.CustomsRepository.AddAsync(mappedCustomsData);
+
+            return _unit.SaveAsync();
         }
 
         public Task UpdateAsync(CustomsDataDTO customsData)

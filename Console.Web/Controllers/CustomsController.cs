@@ -4,7 +4,6 @@ using Web.Models;
 using Custom.BL.Models;
 using Custom.BL.Services;
 using Web.ViewModels;
-using System.Threading.Tasks;
 
 namespace Web.Controllers
 {
@@ -24,14 +23,14 @@ namespace Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Index(CustomsViewModel model)
+        public IActionResult Index(CustomsViewModel model)
         {
-            model.Result = await _customService.GetResult(new CustomsDataDTO
+            model.Result =  _customService.GetResult(new CustomsDataDTO
             {
-                VehicleType = model.CarType,
+                VehicleType = model.VehicleType,
                 EngineVolume = model.EngineVolume,
                 FuelType = model.FuelType,
-                VehicleWeight = model.CarWeight,
+                VehicleWeight = model.VehicleWeight,
                 Price = model.Price,
                 Year = model.Year,
             });
