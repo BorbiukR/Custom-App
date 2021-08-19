@@ -1,3 +1,4 @@
+using Custom.Api.Logger;
 using Custom.BL.Services;
 using Custom.DAL.Interfaces;
 using Custom.DAL.Repositories;
@@ -7,7 +8,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using System.IO;
 using Web.Models;
 
 namespace Custom.Api
@@ -44,7 +47,7 @@ namespace Custom.Api
             });
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
         {
             if (env.IsDevelopment())
             {
@@ -55,7 +58,10 @@ namespace Custom.Api
             else
             {
                 app.UseHsts();
-            }       
+            }
+
+            loggerFactory.AddFile(Path.Combine(Directory.GetCurrentDirectory(), "logger.txt"));
+            var logger = loggerFactory.CreateLogger("FileLogger");
 
             app.UseHttpsRedirection();
 

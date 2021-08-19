@@ -1,0 +1,4 @@
+Application started. Press Ctrl+C to shut down.
+Hosting environment: Development
+Content root path: C:\Users\user\source\repos\Custom-App\Custom.Api
+Calculate customs for electric car successfully
